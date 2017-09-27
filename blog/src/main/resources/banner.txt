@@ -1,0 +1,13 @@
+
+${AnsiColor.GREEN}  .-')     ('-. .-.    ('-.    _  .-')                                       .-. .-')
+ ${AnsiColor.GREEN}( OO ).  ( OO )  /  _(  OO)  ( \( -O )                                      \  ( OO )
+${AnsiColor.GREEN}(_)---\_) ,--. ,--. (,------.  ,------.   ,--.       .-'),-----.    .-----.  ,--. ,--.
+${AnsiColor.GREEN}/    _ |  |  | |  |  |  .---'  |   /`. '  |  |.-')  ( OO'  .-.  '  '  .--./  |  .'   /
+${AnsiColor.GREEN}\  :` `.  |   .|  |  |  |      |  /  | |  |  | OO ) /   |  | |  |  |  |('-.  |      /,
+${AnsiColor.GREEN} '..`''.) |       | (|  '--.   |  |_.' |  |  |`-' | \_) |  |\|  | /_) |OO  ) |     ' _)
+${AnsiColor.GREEN}.-._)   \ |  .-.  |  |  .--'   |  .  '.' (|  '---.'   \ |  | |  | ||  |`-'|  |  .   \
+${AnsiColor.GREEN}\       / |  | |  |  |  `---.  |  |\  \   |      |     `'  '-'  '(_'  '--'\  |  |\   \
+${AnsiColor.GREEN} `-----'  `--' `--'  `------'  `--' '--'  `------'       `-----'    `-----'  `--' '--'
+
+${AnsiColor.BRIGHT_BLUE}:: Sherlock 🤓  :: Running Spring Boot ${spring-boot.version} ::
+:: https://github.com/tb280320889 ::${AnsiColor.DEFAULT}

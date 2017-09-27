@@ -1,0 +1,4 @@
+rootProject.name = 'resume-demo'
+include 'blog'
+include 'discovery-server-ha-1'
+
