@@ -15,23 +15,23 @@ import java.util.*
 
 interface UserRepository : JpaRepository<User, Long> {
 
-  fun findOneByActivationKey(activationKey: String): Optional<User>
+    fun findOneByActivationKey(activationKey: String): Optional<User>
 
-  fun findAllByActivatedIsFalseAndCreatedDateBefore(dateTime: Instant): List<User>
+    fun findAllByActivatedIsFalseAndCreatedDateBefore(dateTime: Instant): List<User>
 
-  fun findOneByResetKey(resetKey: String): Optional<User>
+    fun findOneByResetKey(resetKey: String?): Optional<User>
 
-  fun findOneByEmail(email: String): Optional<User>
+    fun findOneByEmail(email: String?): Optional<User>
 
-  fun findOneByLogin(login: String): Optional<User>
+    fun findOneByLogin(login: String?): Optional<User>
 
-  @EntityGraph(attributePaths = arrayOf("authorities"))
-  fun findOneWithAuthoritiesById(id: Long?): User
+    @EntityGraph(attributePaths = arrayOf("authorities"))
+    fun findOneWithAuthoritiesById(id: Long?): User
 
-  @EntityGraph(attributePaths = arrayOf("authorities"))
-  @Cacheable(cacheNames = arrayOf("users"))
-  fun findOneWithAuthoritiesByLogin(login: String): Optional<User>
+    @EntityGraph(attributePaths = arrayOf("authorities"))
+    @Cacheable(cacheNames = arrayOf("users"))
+    fun findOneWithAuthoritiesByLogin(login: String?): Optional<User>
 
-  fun findAllByLoginNot(pageable: Pageable, login: String): Page<User>
+    fun findAllByLoginNot(pageable: Pageable, login: String): Page<User>
 }
 

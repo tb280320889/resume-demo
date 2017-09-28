@@ -11,15 +11,16 @@ import java.time.Instant
  *
  * Spring Data JPA repository for the PersistentAuditEvent entity.
  */
+
 interface PersistenceAuditEventRepository : JpaRepository<PersistentAuditEvent, Long> {
 
-  fun findByPrincipal(principal: String): List<PersistentAuditEvent>
+    fun findByPrincipal(principal: String): List<PersistentAuditEvent>
 
-  fun findByAuditEventDateAfter(after: Instant): List<PersistentAuditEvent>
+    fun findByAuditEventDateAfter(after: Instant): List<PersistentAuditEvent>
 
-  fun findByPrincipalAndAuditEventDateAfter(principal: String, after: Instant): List<PersistentAuditEvent>
+    fun findByPrincipalAndAuditEventDateAfter(principal: String, after: Instant): List<PersistentAuditEvent>
 
-  fun findByPrincipalAndAuditEventDateAfterAndAuditEventType(principle: String, after: Instant, type: String): List<PersistentAuditEvent>
+    fun findByPrincipalAndAuditEventDateAfterAndAuditEventType(principle: String, after: Instant, type: String): List<PersistentAuditEvent>
 
-  fun findAllByAuditEventDateBetween(fromDate: Instant, toDate: Instant, pageable: Pageable): Page<PersistentAuditEvent>
+    fun findAllByAuditEventDateBetween(fromDate: Instant, toDate: Instant, pageable: Pageable): Page<PersistentAuditEvent>
 }

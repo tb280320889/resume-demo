@@ -15,36 +15,36 @@ import org.springframework.beans.BeanUtils
  */
 class UserMapper {
 
-  fun userToUserDTO(user: User): UserDTO = UserDTO(user)
+    fun userToUserDTO(user: User): UserDTO = UserDTO(user)
 
-  fun usersToUserDTOs(users: List<User?>): List<UserDTO> {
-    return users.filterNotNull().map { userToUserDTO(it) }
-  }
-
-  fun userDTOToUser(userDTO: UserDTO?): User? {
-    return if (userDTO == null) {
-      null
-    } else {
-      val user = User()
-      BeanUtils.copyProperties(userDTO, user)
-      user
+    fun usersToUserDTOs(users: List<User?>): List<UserDTO> {
+        return users.filterNotNull().map { userToUserDTO(it) }
     }
-  }
 
-  fun userDTOsToUsers(userDTOs: List<UserDTO?>): List<User> {
-    return userDTOs.filterNotNull().map { userDTOToUser(it)!! }
-  }
+    fun userDTOToUser(userDTO: UserDTO?): User? {
+        return if (userDTO == null) {
+            null
+        } else {
+            val user = User()
+            BeanUtils.copyProperties(userDTO, user)
+            user
+        }
+    }
 
-  fun userFromId(id: Long?): User? {
-    return if (id != null) {
-      val user = User()
-      user.id = id
-      user
-    } else null
-  }
+    fun userDTOsToUsers(userDTOs: List<UserDTO?>): List<User> {
+        return userDTOs.filterNotNull().map { userDTOToUser(it)!! }
+    }
 
-  fun authoritiesFromStrings(strings: Set<String>): Set<Authority> {
-    return strings.mapTo(HashSet()) { Authority(name = it) }
-  }
+    fun userFromId(id: Long?): User? {
+        return if (id != null) {
+            val user = User()
+            user.id = id
+            user
+        } else null
+    }
+
+    fun authoritiesFromStrings(strings: Set<String>): Set<Authority> {
+        return strings.mapTo(HashSet()) { Authority(name = it) }
+    }
 
 }

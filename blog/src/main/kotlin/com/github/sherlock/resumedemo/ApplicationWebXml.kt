@@ -1,6 +1,6 @@
 package com.github.sherlock.resumedemo
 
-import com.github.sherlock.resumedemo.config.DefaultProfileUtil
+import com.github.sherlock.resumedemo.config.util.DefaultProfileUtil
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.support.SpringBootServletInitializer
 
@@ -11,11 +11,11 @@ import org.springframework.boot.web.support.SpringBootServletInitializer
  */
 
 class ApplicationWebXml : SpringBootServletInitializer() {
-  override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {
-    /**
-     * set a default to use when no profile is configured.
-     */
-    DefaultProfileUtil.addDefaultProfile(application.application())
-    return application.sources(BlogApp::class.java)
-  }
+    override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {
+        /**
+         * set a default to use when no profile is configured.
+         */
+        DefaultProfileUtil.addDefaultProfile(application.application())
+        return application.sources(BlogApp::class.java)
+    }
 }

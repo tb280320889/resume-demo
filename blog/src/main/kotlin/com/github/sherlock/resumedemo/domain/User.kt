@@ -1,7 +1,7 @@
 package com.github.sherlock.resumedemo.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.github.sherlock.resumedemo.config.ConstantsKT.LOGIN_REGEX
+import com.github.sherlock.resumedemo.config.constants.ConstantsKT.LOGIN_REGEX
 import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -93,7 +93,7 @@ data class User
     var authorities: Set<Authority> = HashSet()
 
 ) : AbstractAuditingEntity(), Serializable {
-  companion object {
-    private val serialVersionUID = -584892002L
-  }
+    companion object {
+        private val serialVersionUID = -584892002L
+    }
 }

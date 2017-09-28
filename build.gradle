@@ -14,11 +14,11 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersionNew}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
     }
-}
 
+}
 
 allprojects {
     group = 'com.github.sherlock.demo'
@@ -64,8 +64,8 @@ subprojects {
         compile("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
         compile('org.springframework.cloud:spring-cloud-starter-eureka')
         compile('org.springframework.cloud:spring-cloud-starter-eureka-server')
-        compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersionNew}")
-        compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersionNew}")
+        compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+        compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
 //        compile("org.projectlombok:lombok")
         runtime('org.springframework.boot:spring-boot-devtools')
         compile('org.springframework.boot:spring-boot-starter-actuator')

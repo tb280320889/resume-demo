@@ -39,404 +39,404 @@ import org.springframework.util.MultiValueMap
 @Transactional
 class SocialServiceIntTest {
 
-  @Autowired
-  private val authorityRepository: AuthorityRepository? = null
+    @Autowired
+    private val authorityRepository: AuthorityRepository? = null
 
-  @Autowired
-  private val passwordEncoder: PasswordEncoder? = null
+    @Autowired
+    private val passwordEncoder: PasswordEncoder? = null
 
-  @Autowired
-  private val userRepository: UserRepository? = null
+    @Autowired
+    private val userRepository: UserRepository? = null
 
-  @Mock
-  private val mockMailService: MailService? = null
+    @Mock
+    private val mockMailService: MailService? = null
 
-  @Mock
-  private val mockUsersConnectionRepository: UsersConnectionRepository? = null
+    @Mock
+    private val mockUsersConnectionRepository: UsersConnectionRepository? = null
 
-  @Mock
-  private val mockConnectionRepository: ConnectionRepository? = null
+    @Mock
+    private val mockConnectionRepository: ConnectionRepository? = null
 
-  private var socialService: SocialService? = null
+    private var socialService: SocialService? = null
 
-  @Before
-  fun setup() {
-    MockitoAnnotations.initMocks(this)
-    doNothing().`when`(mockMailService)!!.sendSocialRegistrationValidationEmail(Matchers.anyObject(), Matchers.anyString())
-    doNothing().`when`(mockConnectionRepository)!!.addConnection(Matchers.anyObject())
-    `when`<ConnectionRepository>(mockUsersConnectionRepository!!.createConnectionRepository(Matchers.anyString())).thenReturn(mockConnectionRepository)
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+        doNothing().`when`(mockMailService)!!.sendSocialRegistrationValidationEmail(Matchers.anyObject(), Matchers.anyString())
+        doNothing().`when`(mockConnectionRepository)!!.addConnection(Matchers.anyObject())
+        `when`<ConnectionRepository>(mockUsersConnectionRepository!!.createConnectionRepository(Matchers.anyString())).thenReturn(mockConnectionRepository)
 
-    socialService = SocialService(
-        mockUsersConnectionRepository, authorityRepository!!,
-        passwordEncoder!!, userRepository!!, mockMailService!!
-    )
-  }
-
-  @Test
-  @Throws(Exception::class)
-  fun testDeleteUserSocialConnection() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
-    socialService!!.createSocialUser(connection, "fr")
-    val connectionsByProviderId = LinkedMultiValueMap<String, Connection<*>>()
-    connectionsByProviderId.put("PROVIDER", null)
-    `when`<MultiValueMap<String, Connection<*>>>(mockConnectionRepository!!.findAllConnections()).thenReturn(connectionsByProviderId)
-
-    // Exercise
-    socialService!!.deleteUserSocialConnection("@LOGIN")
-
-    // Verify
-    verify<ConnectionRepository>(mockConnectionRepository, times(1)).removeConnections("PROVIDER")
-  }
-
-  @Test(expected = IllegalArgumentException::class)
-  fun testCreateSocialUserShouldThrowExceptionIfConnectionIsNull() {
-    // Exercise
-    socialService!!.createSocialUser(null, "fr")
-  }
-
-  @Test(expected = IllegalArgumentException::class)
-  fun testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndNoLogin() {
-    // Setup
-    val connection = createConnection(
-        "",
-        "",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
-
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
-  }
-
-  @Test(expected = IllegalArgumentException::class)
-  fun testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndLoginAlreadyExist() {
-    // Setup
-    val user = createExistingUser(
-        "@LOGIN",
-        "mail@mail.com",
-        "OTHER_FIRST_NAME",
-        "OTHER_LAST_NAME",
-        "OTHER_IMAGE_URL"
-    )
-    val connection = createConnection(
-        "@LOGIN",
-        "",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
-
-    // Exercise
-    try {
-      // Exercise
-      socialService!!.createSocialUser(connection, "fr")
+        socialService = SocialService(
+            mockUsersConnectionRepository, authorityRepository!!,
+            passwordEncoder!!, userRepository!!, mockMailService!!
+        )
     }
-    finally {
-      // Teardown
-      userRepository!!.delete(user)
+
+    @Test
+    @Throws(Exception::class)
+    fun testDeleteUserSocialConnection() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
+        socialService!!.createSocialUser(connection, "fr")
+        val connectionsByProviderId = LinkedMultiValueMap<String, Connection<*>>()
+        connectionsByProviderId.put("PROVIDER", null)
+        `when`<MultiValueMap<String, Connection<*>>>(mockConnectionRepository!!.findAllConnections()).thenReturn(connectionsByProviderId)
+
+        // Exercise
+        socialService!!.deleteUserSocialConnection("@LOGIN")
+
+        // Verify
+        verify<ConnectionRepository>(mockConnectionRepository, times(1)).removeConnections("PROVIDER")
     }
-  }
 
-  @Test
-  fun testCreateSocialUserShouldCreateUserIfNotExist() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+    @Test(expected = IllegalArgumentException::class)
+    fun testCreateSocialUserShouldThrowExceptionIfConnectionIsNull() {
+        // Exercise
+        socialService!!.createSocialUser(null, "fr")
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test(expected = IllegalArgumentException::class)
+    fun testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndNoLogin() {
+        // Setup
+        val connection = createConnection(
+            "",
+            "",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    // Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com")
-    assertThat(user).isPresent
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
+    }
 
-    // Teardown
-    userRepository.delete(user.get())
-  }
+    @Test(expected = IllegalArgumentException::class)
+    fun testCreateSocialUserShouldThrowExceptionIfConnectionHasNoEmailAndLoginAlreadyExist() {
+        // Setup
+        val user = createExistingUser(
+            "@LOGIN",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL"
+        )
+        val connection = createConnection(
+            "@LOGIN",
+            "",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-  @Test
-  fun testCreateSocialUserShouldCreateUserWithSocialInformation() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Exercise
+        try {
+            // Exercise
+            socialService!!.createSocialUser(connection, "fr")
+        }
+        finally {
+            // Teardown
+            userRepository!!.delete(user)
+        }
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateUserIfNotExist() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(user.firstName).isEqualTo("FIRST_NAME")
-    assertThat(user.lastName).isEqualTo("LAST_NAME")
-    assertThat(user.imageUrl).isEqualTo("IMAGE_URL")
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    userRepository.delete(user)
-  }
+        // Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com")
+        assertThat(user).isPresent
 
-  @Test
-  fun testCreateSocialUserShouldCreateActivatedUserWithRoleUserAndPassword() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Teardown
+        userRepository.delete(user.get())
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateUserWithSocialInformation() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(user.activated).isEqualTo(true)
-    assertThat(user.password).isNotEmpty()
-    val userAuthority = authorityRepository!!.findOne("ROLE_USER")
-    assertThat(user.authorities).containsExactly(userAuthority)
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    userRepository.delete(user)
-  }
+        //Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(user.firstName).isEqualTo("FIRST_NAME")
+        assertThat(user.lastName).isEqualTo("LAST_NAME")
+        assertThat(user.imageUrl).isEqualTo("IMAGE_URL")
 
-  @Test
-  fun testCreateSocialUserShouldCreateUserWithExactLangKey() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Teardown
+        userRepository.delete(user)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateActivatedUserWithRoleUserAndPassword() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(user.langKey).isEqualTo("fr")
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    userRepository.delete(user)
-  }
+        //Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(user.activated).isEqualTo(true)
+        assertThat(user.password).isNotEmpty()
+        val userAuthority = authorityRepository!!.findOne("ROLE_USER")
+        assertThat(user.authorities).containsExactly(userAuthority)
 
-  @Test
-  fun testCreateSocialUserShouldCreateUserWithLoginSameAsEmailIfNotTwitter() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER_OTHER_THAN_TWITTER"
-    )
+        // Teardown
+        userRepository.delete(user)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateUserWithExactLangKey() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(user.login).isEqualTo("mail@mail.com")
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    userRepository.delete(user)
-  }
+        //Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(user.langKey).isEqualTo("fr")
 
-  @Test
-  fun testCreateSocialUserShouldCreateUserWithSocialLoginWhenIsTwitter() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "twitter"
-    )
+        // Teardown
+        userRepository.delete(user)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateUserWithLoginSameAsEmailIfNotTwitter() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER_OTHER_THAN_TWITTER"
+        )
 
-    //Verify
-    val user = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(user.login).isEqualToIgnoringCase("@LOGIN")
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    userRepository.delete(user)
-  }
+        //Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(user.login).isEqualTo("mail@mail.com")
 
-  @Test
-  fun testCreateSocialUserShouldCreateSocialConnection() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Teardown
+        userRepository.delete(user)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateUserWithSocialLoginWhenIsTwitter() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "twitter"
+        )
 
-    //Verify
-    verify<ConnectionRepository>(mockConnectionRepository, times(1)).addConnection(connection)
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    val userToDelete = userRepository!!.findOneByEmail("mail@mail.com").get()
-    userRepository.delete(userToDelete)
-  }
+        //Verify
+        val user = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(user.login).isEqualToIgnoringCase("@LOGIN")
 
-  @Test
-  fun testCreateSocialUserShouldNotCreateUserIfEmailAlreadyExist() {
-    // Setup
-    createExistingUser(
-        "@OTHER_LOGIN",
-        "mail@mail.com",
-        "OTHER_FIRST_NAME",
-        "OTHER_LAST_NAME",
-        "OTHER_IMAGE_URL"
-    )
-    val initialUserCount = userRepository!!.count()
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Teardown
+        userRepository.delete(user)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldCreateSocialConnection() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    assertThat(userRepository.count()).isEqualTo(initialUserCount)
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-    // Teardown
-    val userToDelete = userRepository.findOneByEmail("mail@mail.com").get()
-    userRepository.delete(userToDelete)
-  }
+        //Verify
+        verify<ConnectionRepository>(mockConnectionRepository, times(1)).addConnection(connection)
 
-  @Test
-  fun testCreateSocialUserShouldNotChangeUserIfEmailAlreadyExist() {
-    // Setup
-    createExistingUser(
-        "@OTHER_LOGIN",
-        "mail@mail.com",
-        "OTHER_FIRST_NAME",
-        "OTHER_LAST_NAME",
-        "OTHER_IMAGE_URL"
-    )
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        // Teardown
+        val userToDelete = userRepository!!.findOneByEmail("mail@mail.com").get()
+        userRepository.delete(userToDelete)
+    }
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+    @Test
+    fun testCreateSocialUserShouldNotCreateUserIfEmailAlreadyExist() {
+        // Setup
+        createExistingUser(
+            "@OTHER_LOGIN",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL"
+        )
+        val initialUserCount = userRepository!!.count()
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    //Verify
-    val userToVerify = userRepository!!.findOneByEmail("mail@mail.com").get()
-    assertThat(userToVerify.login).isEqualTo("@other_login")
-    assertThat(userToVerify.firstName).isEqualTo("OTHER_FIRST_NAME")
-    assertThat(userToVerify.lastName).isEqualTo("OTHER_LAST_NAME")
-    assertThat(userToVerify.imageUrl).isEqualTo("OTHER_IMAGE_URL")
-    // Teardown
-    userRepository.delete(userToVerify)
-  }
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-  @Test
-  fun testCreateSocialUserShouldSendRegistrationValidationEmail() {
-    // Setup
-    val connection = createConnection(
-        "@LOGIN",
-        "mail@mail.com",
-        "FIRST_NAME",
-        "LAST_NAME",
-        "IMAGE_URL",
-        "PROVIDER"
-    )
+        //Verify
+        assertThat(userRepository.count()).isEqualTo(initialUserCount)
 
-    // Exercise
-    socialService!!.createSocialUser(connection, "fr")
+        // Teardown
+        val userToDelete = userRepository.findOneByEmail("mail@mail.com").get()
+        userRepository.delete(userToDelete)
+    }
 
-    //Verify
-    verify(mockMailService, times(1))!!.sendSocialRegistrationValidationEmail(Matchers.anyObject(), Matchers.anyString())
+    @Test
+    fun testCreateSocialUserShouldNotChangeUserIfEmailAlreadyExist() {
+        // Setup
+        createExistingUser(
+            "@OTHER_LOGIN",
+            "mail@mail.com",
+            "OTHER_FIRST_NAME",
+            "OTHER_LAST_NAME",
+            "OTHER_IMAGE_URL"
+        )
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    // Teardown
-    val userToDelete = userRepository!!.findOneByEmail("mail@mail.com").get()
-    userRepository!!.delete(userToDelete)
-  }
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-  private fun createConnection(
-      login: String,
-      email: String,
-      firstName: String,
-      lastName: String,
-      imageUrl: String,
-      providerId: String
-  ): Connection<*> {
-    val userProfile = mock<UserProfile>(UserProfile::class.java)
-    `when`<String>(userProfile.email).thenReturn(email)
-    `when`<String>(userProfile.username).thenReturn(login)
-    `when`<String>(userProfile.firstName).thenReturn(firstName)
-    `when`<String>(userProfile.lastName).thenReturn(lastName)
+        //Verify
+        val userToVerify = userRepository!!.findOneByEmail("mail@mail.com").get()
+        assertThat(userToVerify.login).isEqualTo("@other_login")
+        assertThat(userToVerify.firstName).isEqualTo("OTHER_FIRST_NAME")
+        assertThat(userToVerify.lastName).isEqualTo("OTHER_LAST_NAME")
+        assertThat(userToVerify.imageUrl).isEqualTo("OTHER_IMAGE_URL")
+        // Teardown
+        userRepository.delete(userToVerify)
+    }
 
-    val connection = mock<Connection<*>>(Connection::class.java)
-    val key = ConnectionKey(providerId, "PROVIDER_USER_ID")
-    `when`<UserProfile>(connection.fetchUserProfile()).thenReturn(userProfile)
-    `when`<ConnectionKey>(connection.key).thenReturn(key)
-    `when`<String>(connection.imageUrl).thenReturn(imageUrl)
+    @Test
+    fun testCreateSocialUserShouldSendRegistrationValidationEmail() {
+        // Setup
+        val connection = createConnection(
+            "@LOGIN",
+            "mail@mail.com",
+            "FIRST_NAME",
+            "LAST_NAME",
+            "IMAGE_URL",
+            "PROVIDER"
+        )
 
-    return connection
-  }
+        // Exercise
+        socialService!!.createSocialUser(connection, "fr")
 
-  private fun createExistingUser(
-      login: String,
-      email: String,
-      firstName: String,
-      lastName: String,
-      imageUrl: String
-  ): User {
-    val user = User()
-    user.login = (login)
-    user.password = (passwordEncoder!!.encode("password"))
-    user.email = (email)
-    user.firstName = (firstName)
-    user.lastName = (lastName)
-    user.imageUrl = (imageUrl)
-    return userRepository!!.saveAndFlush(user)
-  }
+        //Verify
+        verify(mockMailService, times(1))!!.sendSocialRegistrationValidationEmail(Matchers.anyObject(), Matchers.anyString())
+
+        // Teardown
+        val userToDelete = userRepository!!.findOneByEmail("mail@mail.com").get()
+        userRepository.delete(userToDelete)
+    }
+
+    private fun createConnection(
+        login: String,
+        email: String,
+        firstName: String,
+        lastName: String,
+        imageUrl: String,
+        providerId: String
+    ): Connection<*> {
+        val userProfile = mock<UserProfile>(UserProfile::class.java)
+        `when`<String>(userProfile.email).thenReturn(email)
+        `when`<String>(userProfile.username).thenReturn(login)
+        `when`<String>(userProfile.firstName).thenReturn(firstName)
+        `when`<String>(userProfile.lastName).thenReturn(lastName)
+
+        val connection = mock<Connection<*>>(Connection::class.java)
+        val key = ConnectionKey(providerId, "PROVIDER_USER_ID")
+        `when`<UserProfile>(connection.fetchUserProfile()).thenReturn(userProfile)
+        `when`<ConnectionKey>(connection.key).thenReturn(key)
+        `when`<String>(connection.imageUrl).thenReturn(imageUrl)
+
+        return connection
+    }
+
+    private fun createExistingUser(
+        login: String,
+        email: String,
+        firstName: String,
+        lastName: String,
+        imageUrl: String
+    ): User {
+        val user = User()
+        user.login = (login)
+        user.password = (passwordEncoder!!.encode("password"))
+        user.email = (email)
+        user.firstName = (firstName)
+        user.lastName = (lastName)
+        user.imageUrl = (imageUrl)
+        return userRepository!!.saveAndFlush(user)
+    }
 }

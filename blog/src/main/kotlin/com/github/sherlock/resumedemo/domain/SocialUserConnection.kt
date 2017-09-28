@@ -62,7 +62,7 @@ data class SocialUserConnection
     var expireTime: Long? = null
 ) : Serializable {
 
-  companion object {
-    private val serialVersionUID = -5848912306L
-  }
+    companion object {
+        private val serialVersionUID = -5848912306L
+    }
 }

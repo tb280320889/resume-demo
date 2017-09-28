@@ -1,7 +1,7 @@
 package com.github.sherlock.resumedemo
 
 import com.github.sherlock.resumedemo.config.ApplicationProperties
-import com.github.sherlock.resumedemo.config.DefaultProfileUtil
+import com.github.sherlock.resumedemo.config.util.DefaultProfileUtil
 import io.github.jhipster.config.JHipsterConstants
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringApplication
@@ -27,57 +27,56 @@ import javax.annotation.PostConstruct
 @EnableDiscoveryClient
 class BlogApp constructor(private val env: Environment) {
 
-
-  /**
-   * Initializes blog.
-   *
-   *
-   * Spring profiles can be configured with a program arguments --spring.profiles.active=your-active-profile
-   *
-   *
-   * You can find more information on how profiles work with JHipster on [http://www.jhipster.tech/profiles/](http://www.jhipster.tech/profiles/).
-   */
-  @PostConstruct
-  fun initApplication() {
-    val activeProfiles = Arrays.asList(*env.activeProfiles)
-    if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
-      log.error("You have misconfigured your application! It should not run " + "with both the 'dev' and 'prod' profiles at the same time.")
-    }
-    if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_CLOUD)) {
-      log.error("You have misconfigured your application! It should not " + "run with both the 'dev' and 'cloud' profiles at the same time.")
-    }
-  }
-
-  companion object {
-    private val log = LoggerFactory.getLogger(BlogApp::class.java)
     /**
-     * Main method, used to run the application.
+     * Initializes blog.
      *
-     * @param args the command line arguments
-     * @throws UnknownHostException if the local host name could not be resolved into an address
+     * Spring profiles can be configured with a program arguments --spring.profiles.active=your-active-profile
+     *
+     * You can find more information on how profiles work with JHipster on [http://www.jhipster.tech/profiles/](http://www.jhipster.tech/profiles/).
      */
-    @Throws(UnknownHostException::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-      val app = SpringApplication(BlogApp::class.java)
-      DefaultProfileUtil.addDefaultProfile(app)
-      val env = app.run(*args).environment
-      var protocol = "http"
-      if (env.getProperty("server.ssl.key-store") != null) {
-        protocol = "https"
-      }
-      log.info("\n----------------------------------------------------------\n\t" +
-          "Application '{}' is running! Access URLs:\n\t" +
-          "Local: \t\t{}://localhost:{}\n\t" +
-          "External: \t{}://{}:{}\n\t" +
-          "Profile(s): \t{}\n----------------------------------------------------------",
-          env.getProperty("spring.application.name"),
-          protocol,
-          env.getProperty("server.port"),
-          protocol,
-          InetAddress.getLocalHost().hostAddress,
-          env.getProperty("server.port"),
-          env.activeProfiles)
+    @PostConstruct
+    fun initApplication() {
+        val activeProfiles = Arrays.asList(*env.activeProfiles)
+        if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
+            log.error("You have misconfigured your application! It should not run " + "with both the 'dev' and 'prod' profiles at the same time.")
+        }
+        if (activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) && activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_CLOUD)) {
+            log.error("You have misconfigured your application! It should not " + "run with both the 'dev' and 'cloud' profiles at the same time.")
+        }
     }
-  }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(BlogApp::class.java)
+        /**
+         * Main method, used to run the application.
+         *
+         * @param args the command line arguments
+         * @throws UnknownHostException if the local host name could not be resolved into an address
+         */
+        @Throws(UnknownHostException::class)
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val app = SpringApplication(BlogApp::class.java)
+            DefaultProfileUtil.addDefaultProfile(app)
+            val env = app.run(*args).environment
+            var protocol = "http"
+            if (env.getProperty("server.ssl.key-store") != null) {
+                protocol = "https"
+            }
+            log.info(
+                "\n----------------------------------------------------------\n\t" +
+                "Application '{}' is running! Access URLs:\n\t" +
+                "Local: \t\t{}://localhost:{}\n\t" +
+                "External: \t{}://{}:{}\n\t" +
+                "Profile(s): \t{}\n----------------------------------------------------------",
+                env.getProperty("spring.application.name"),
+                protocol,
+                env.getProperty("server.port"),
+                protocol,
+                InetAddress.getLocalHost().hostAddress,
+                env.getProperty("server.port"),
+                env.activeProfiles
+            )
+        }
+    }
 }

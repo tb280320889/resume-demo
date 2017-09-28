@@ -46,7 +46,7 @@ data class PersistentAuditEvent
     var data: Map<String, String> = HashMap()
 
 ) : Serializable {
-  companion object {
-    private val serialVersionUID = -584122018L
-  }
+    companion object {
+        private val serialVersionUID = -584122018L
+    }
 }

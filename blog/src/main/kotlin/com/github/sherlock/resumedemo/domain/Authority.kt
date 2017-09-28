@@ -28,7 +28,7 @@ data class Authority
     var name: String? = null
 
 ) : Serializable {
-  companion object {
-    private val serialVersionUID = -584892312L
-  }
+    companion object {
+        private val serialVersionUID = -584892312L
+    }
 }

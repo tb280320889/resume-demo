@@ -1,13 +1,11 @@
 
-${AnsiColor.GREEN}  .-')     ('-. .-.    ('-.    _  .-')                                       .-. .-')
- ${AnsiColor.GREEN}( OO ).  ( OO )  /  _(  OO)  ( \( -O )                                      \  ( OO )
-${AnsiColor.GREEN}(_)---\_) ,--. ,--. (,------.  ,------.   ,--.       .-'),-----.    .-----.  ,--. ,--.
-${AnsiColor.GREEN}/    _ |  |  | |  |  |  .---'  |   /`. '  |  |.-')  ( OO'  .-.  '  '  .--./  |  .'   /
-${AnsiColor.GREEN}\  :` `.  |   .|  |  |  |      |  /  | |  |  | OO ) /   |  | |  |  |  |('-.  |      /,
-${AnsiColor.GREEN} '..`''.) |       | (|  '--.   |  |_.' |  |  |`-' | \_) |  |\|  | /_) |OO  ) |     ' _)
-${AnsiColor.GREEN}.-._)   \ |  .-.  |  |  .--'   |  .  '.' (|  '---.'   \ |  | |  | ||  |`-'|  |  .   \
-${AnsiColor.GREEN}\       / |  | |  |  |  `---.  |  |\  \   |      |     `'  '-'  '(_'  '--'\  |  |\   \
-${AnsiColor.GREEN} `-----'  `--' `--'  `------'  `--' '--'  `------'       `-----'    `-----'  `--' '--'
+ .ooooooo              oooo                                                                                oooo                                                                        oooo
+d8P'    `Y8             888                                                                                   888                                                                          888
+Y88bo.                    888 .oo.                 .ooooo.              oooo d8b         888              .ooooo.               .ooooo.                888  oooo
+ `"Y8888o.            888P"Y88            d88' `88b          `888""8P          888             d88' `88b           d88' `"Y8            888 .8P'
+     `"Y88b              888   888             888ooo888          888                   888             888     888           888                       888888.
+oo     .d8P              888   888               888       .o            888                    888             888     888           888   .o8             888 `88b.
+8""88888P'         o888o o888o        `Y8bod8P          d888b               o888o        `Y8bod8P'         `Y8bod8P'         o888o o888o
 
 ${AnsiColor.BRIGHT_BLUE}:: Sherlock 🤓  :: Running Spring Boot ${spring-boot.version} ::
 :: https://github.com/tb280320889 ::${AnsiColor.DEFAULT}

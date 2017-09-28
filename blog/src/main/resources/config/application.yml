@@ -83,6 +83,9 @@ spring:
         twitter:
             client-id: xxx
             client-secret: xxx
+    output:
+      ansi:
+        enabled: always
 
         # jhipster-needle-add-social-configuration
 

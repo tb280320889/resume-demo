@@ -21,27 +21,23 @@ import java.util.*
 @Transactional
 class AuditEventService constructor(
     private val persistenceAuditEventRepository: PersistenceAuditEventRepository, private val auditEventConverter: AuditEventConverter
-)
-{
+) {
 
 
-  fun findAll(pageable: Pageable): Page<AuditEvent>
-  {
-    return persistenceAuditEventRepository.findAll(pageable)
-        .map { auditEventConverter.convertToAuditEvent(it) }
-  }
+    fun findAll(pageable: Pageable): Page<AuditEvent> {
+        return persistenceAuditEventRepository.findAll(pageable)
+            .map { auditEventConverter.convertToAuditEvent(it) }
+    }
 
-  fun findByDates(fromDate: Instant, toDate: Instant, pageable: Pageable): Page<AuditEvent>
-  {
-    return persistenceAuditEventRepository
-        .findAllByAuditEventDateBetween(fromDate, toDate, pageable)
-        .map { auditEventConverter.convertToAuditEvent(it) }
-  }
+    fun findByDates(fromDate: Instant, toDate: Instant, pageable: Pageable): Page<AuditEvent> {
+        return persistenceAuditEventRepository
+            .findAllByAuditEventDateBetween(fromDate, toDate, pageable)
+            .map { auditEventConverter.convertToAuditEvent(it) }
+    }
 
-  fun find(id: Long?): Optional<AuditEvent>
-  {
-    return Optional.ofNullable(persistenceAuditEventRepository.findOne(id))
-        .map { auditEventConverter.convertToAuditEvent(it) }
-  }
+    fun find(id: Long?): Optional<AuditEvent> {
+        return Optional.ofNullable(persistenceAuditEventRepository.findOne(id))
+            .map { auditEventConverter.convertToAuditEvent(it) }
+    }
 
 }
